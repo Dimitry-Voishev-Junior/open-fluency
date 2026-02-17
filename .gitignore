@@ -3,7 +3,7 @@
 ################################################################################
 
 /.vs
-/OpenFluency.Web/.vs
-/OpenFluency.Web/OpenFluency.Web/bin
-/OpenFluency.Web/OpenFluency.Web/obj
-/OpenFluency.Web/OpenFluency.Web/OpenFluency.Web.csproj.user
+/src/.vs
+/src/OpenFluency.Web/bin
+/src/OpenFluency.Web/obj
+/src/OpenFluency.Web/OpenFluency.Web.csproj.user
