@@ -10,4 +10,8 @@
     <Folder Include="wwwroot\lib\bootstrap\dist\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\OpenFluency.Services\OpenFluency.Services.csproj" />
+  </ItemGroup>
+
 </Project>
