@@ -87,14 +87,14 @@ INSERT INTO `open_fluency`.`papel`
 (`papel_id`,
 `nome`)
 VALUES
-(2>,
+(2,
 "Professor");
 
 INSERT INTO `open_fluency`.`papel`
 (`papel_id`,
 `nome`)
 VALUES
-(3>,
+(3,
 "Aluno");
 
 INSERT INTO `open_fluency`.`usuario`
