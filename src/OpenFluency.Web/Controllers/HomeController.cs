@@ -8,7 +8,6 @@ namespace OpenFluency.Web.Controllers
     {
         public IActionResult Index()
         {
-            throw new Exception("Ocorreu um erro ao carregar a home");
             return View();
         }
 
