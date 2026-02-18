@@ -2,5 +2,7 @@
   <Folder Name="/DbScripts/">
     <File Path="create_database.sql" />
   </Folder>
+  <Project Path="OpenFluency.Repositories/OpenFluency.Repositories.csproj" Id="4d2dcd6b-2c0b-4ad1-8db5-5baf5ee5b436" />
+  <Project Path="OpenFluency.Services/OpenFluency.Services.csproj" Id="db93dd64-0eb5-4d91-96bc-bd5e92204f70" />
   <Project Path="OpenFluency.Web/OpenFluency.Web.csproj" />
 </Solution>

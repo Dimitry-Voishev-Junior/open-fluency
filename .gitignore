@@ -7,3 +7,7 @@
 /src/OpenFluency.Web/bin
 /src/OpenFluency.Web/obj
 /src/OpenFluency.Web/OpenFluency.Web.csproj.user
+/src/OpenFluency.Repositories/bin
+/src/OpenFluency.Repositories/obj
+/src/OpenFluency.Services/bin
+/src/OpenFluency.Services/obj
