@@ -40,5 +40,14 @@
 
                 return RedirectToAction("Index", "Home");
             }
+
+
+            [HttpPost]
+            [Route("Logout")]
+            public IActionResult Logout()
+            {
+                HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("Login", "Usuario");
+            }
         }
     }
