@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using OpenFluency.Repositories;
 using OpenFluency.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,10 @@ builder.Services
 });
 
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
+var connectionString = builder.Configuration.GetConnectionString("OpenFluencyConnectionString");
+
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>(c => new UsuarioRepository(connectionString!));
 
 var app = builder.Build();
 

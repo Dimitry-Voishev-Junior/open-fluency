@@ -1,69 +1,71 @@
-﻿    using Microsoft.AspNetCore.Authentication;
-    using Microsoft.AspNetCore.Authentication.Cookies;
-    using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using OpenFluency.Services;
 using OpenFluency.Web.Models.Usuario;
-    using System.Security.Claims;
+using System.Security.Claims;
 
 namespace OpenFluency.Web.Controllers
+{
+    public class UsuarioController : Controller
     {
-        public class UsuarioController : Controller
-        {   
-            private readonly IUsuarioService _usuarioService;
-            UsuarioController(IUsuarioService usuarioService)
+        private readonly IUsuarioService _usuarioService;
+        public UsuarioController(IUsuarioService usuarioService)
+        {
+            _usuarioService = usuarioService;
+        }
+
+        
+
+        [Route("login")]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Route("Login")]
+        public IActionResult Login(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
             {
-                _usuarioService = usuarioService;
+                return View(model);
             }
 
-            [Route("login")]
-            public IActionResult Login()
+            var result = _usuarioService.ValidarLogin(model.Usuario!, model.Senha!);
+
+            if (!result.Sucesso)
             {
-                return View();
+                ModelState.AddModelError(string.Empty, result.MensagemErro!);
+                return View(model);
             }
 
-            [HttpPost]
-            [Route("Login")]
-            public IActionResult Login(LoginViewModel model)
-            {
-                if (!ModelState.IsValid)
-                {
-                    return View(model);
-                }
-
-                var result = _usuarioService.ValidarLogin(model.Usuario!, model.Senha!);
-
-                if (!result.Sucesso)
-                {
-                    ModelState.AddModelError(string.Empty, result.MensagemErro!);
-                    return View(model);
-                }
-
-                var claims = new List<Claim>
+            var claims = new List<Claim>
 
                 {
                     new (ClaimTypes.NameIdentifier, model.Usuario!)
                 };
 
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                var propeties = new AuthenticationProperties
-                {
-                    AllowRefresh = true,
-                    IsPersistent = model.LembrarMe
-                };
-
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), propeties);
-
-                return RedirectToAction("Index", "Home");
-            }
-
-
-            [HttpPost]
-            [Route("Logout")]
-            public IActionResult Logout()
+            var propeties = new AuthenticationProperties
             {
-                HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                return RedirectToAction("Login", "Usuario");
-            }
+                AllowRefresh = true,
+                IsPersistent = model.LembrarMe
+            };
+
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), propeties);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
+        [HttpPost]
+        [Route("Logout")]
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Usuario");
         }
     }
+}

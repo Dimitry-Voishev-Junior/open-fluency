@@ -1,4 +1,5 @@
-﻿using OpenFluency.Services.Models.Usuario;
+﻿using OpenFluency.Repositories;
+using OpenFluency.Services.Models.Usuario;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,15 +8,51 @@ namespace OpenFluency.Services
 {
     public interface IUsuarioService
     {
-        ValidarLoginResult ValidarLogin(string usuario, string senha);
+        ValidarLoginResult ValidarLogin(string login, string senha);
     }
 
     public class UsuarioService : IUsuarioService
     {
-        public ValidarLoginResult ValidarLogin(string usuario, string senha) 
+        private readonly IUsuarioRepository _usuarioRepository;
+
+        public UsuarioService(IUsuarioRepository usuarioRepository)
+        {
+            _usuarioRepository = usuarioRepository;
+        }
+
+        public ValidarLoginResult ValidarLogin(string login, string senha)
         {
             var result = new ValidarLoginResult();
 
+            if (string.IsNullOrEmpty(login))
+            {
+                result.MensagemErro = "Usuário é obrigatório";
+
+                return result;
+            }
+
+            if (string.IsNullOrEmpty(senha))
+            {
+                result.MensagemErro = "Senha é obrigatória";
+
+                return result;
+            }
+
+            var usuario = _usuarioRepository.ObterPorLogin(login);
+
+            if (usuario == null)
+            {
+                result.MensagemErro = "Usuário ou senha inválidos";
+                return result;
+            }
+
+            if (usuario.Senha != senha)
+            {
+                result.MensagemErro = "Usuário ou senha inválido";
+                return result;
+            }
+
+            //se chegou até aqui é pq funcionou
             result.Sucesso = true;
 
             return result;
