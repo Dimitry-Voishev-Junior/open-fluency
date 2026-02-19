@@ -1,13 +1,20 @@
 ﻿    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Mvc;
-    using OpenFluency.Web.Models.Usuario;
+using OpenFluency.Services;
+using OpenFluency.Web.Models.Usuario;
     using System.Security.Claims;
 
-    namespace OpenFluency.Web.Controllers
+namespace OpenFluency.Web.Controllers
     {
         public class UsuarioController : Controller
-        {
+        {   
+            private readonly IUsuarioService _usuarioService;
+            UsuarioController(IUsuarioService usuarioService)
+            {
+                _usuarioService = usuarioService;
+            }
+
             [Route("login")]
             public IActionResult Login()
             {
@@ -23,7 +30,16 @@
                     return View(model);
                 }
 
+                var result = _usuarioService.ValidarLogin(model.Usuario!, model.Senha!);
+
+                if (!result.Sucesso)
+                {
+                    ModelState.AddModelError(string.Empty, result.MensagemErro!);
+                    return View(model);
+                }
+
                 var claims = new List<Claim>
+
                 {
                     new (ClaimTypes.NameIdentifier, model.Usuario!)
                 };
