@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace OpenFluency.Repositories
+﻿namespace OpenFluency.Repositories
 {
     public class BaseRepository
     {
