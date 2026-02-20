@@ -1,5 +1,6 @@
 ﻿using OpenFluency.Repositories;
 using OpenFluency.Services.Enums;
+using OpenFluency.Services.Mappings;
 using OpenFluency.Services.Models.Professor;
 
 namespace OpenFluency.Services
@@ -33,26 +34,21 @@ namespace OpenFluency.Services
 
             //inserir usuário
 
-            var usuarioID = _usuarioRepository.Inserir(new Repositories.Entities.Usuario
-             {
-               Login = request.Login,
-               Senha = request.Senha,
-               PapelId = (int)Papel.Professor
-             });
+            var usuario = request.MapToUsuario();
 
-            if (!usuarioID.HasValue)
+            var usuarioId = _usuarioRepository.Inserir(usuario);
+
+            if (!usuarioId.HasValue)
             {
                 result.MensagemErro = "Erro ao inserir usuário.";
                 return result;
             }
 
             //inserir professor
-            _professorRepository.Inserir(new Repositories.Entities.Professor
-            {
-                Nome = request.Nome,
-                Email = request.Email,
-                UsuarioId = usuarioID.Value
-            }); 
+
+            var professor = request.MapToProfessor(usuarioId.Value);
+
+            _professorRepository.Inserir(professor);
 
             result.Sucesso = true;
 

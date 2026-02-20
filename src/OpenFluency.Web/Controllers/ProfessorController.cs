@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using OpenFluency.Services;
 using OpenFluency.Services.Models.Professor;
+using OpenFluency.Web.Mappings;
 using OpenFluency.Web.Models.Professor;
 
 namespace OpenFluency.Web.Controllers
@@ -33,13 +34,7 @@ namespace OpenFluency.Web.Controllers
             }
 
             // criar o professor
-            var result = _professorService.Criar(new CriarProfessorRequest
-            {
-                Login = model.Login!,
-                Senha = model.Senha!,
-                Nome = model.Nome!,
-                Email = model.Email!,
-            });
+            var result = _professorService.Criar(model.MaptoCriarProfessorRequest());
 
             if (!result.Sucesso)
             {
