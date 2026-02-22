@@ -1,5 +1,4 @@
 ﻿using OpenFluency.Repositories;
-using OpenFluency.Services.Enums;
 using OpenFluency.Services.Mappings;
 using OpenFluency.Services.Models.Professor;
 
@@ -8,6 +7,7 @@ namespace OpenFluency.Services
     public interface IProfessorService
     {
         CriarProfessorResult Criar(CriarProfessorRequest request);
+        IList<ProfessorResult> Listar();
     }
 
     public class ProfessorService : IProfessorService
@@ -51,6 +51,15 @@ namespace OpenFluency.Services
             _professorRepository.Inserir(professor);
 
             result.Sucesso = true;
+
+            return result;
+        }
+
+        public IList<ProfessorResult> Listar()
+        {
+            var professores = _professorRepository.Listar();
+
+            var result = professores.Select(c => c.MapToProfessorResult()).ToList();
 
             return result;
         }
