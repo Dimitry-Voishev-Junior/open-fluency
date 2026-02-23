@@ -22,7 +22,7 @@ namespace OpenFluency.Services.Mappings
         {
             var usuario = new Usuario
             {
-                Id = request.Id,
+                Id = request.UsuarioId,
                 Login = request.Login,
                 Senha = request.Senha
             };

@@ -22,6 +22,7 @@ namespace OpenFluency.Services.Mappings
             var result = new ProfessorResult
             {
                 Id = professor.Id,
+                UsuarioId = professor.UsuarioId,
                 Nome = professor.Nome,
                 Email = professor.Email,
                 Login = professor.Usuario.Login,

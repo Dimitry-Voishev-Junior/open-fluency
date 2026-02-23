@@ -19,7 +19,7 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `open_fluency`.`professor` (
   `professor_id` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(20) NOT NULL,
+  `nome` VARCHAR(200) NOT NULL,
   `email` VARCHAR(60) NOT NULL,
   `usuario_id` INT NOT NULL,
   PRIMARY KEY (`professor_id`),

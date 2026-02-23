@@ -36,6 +36,7 @@ namespace OpenFluency.Web.Mappings
             var viewModel = new EditarViewModel
             {
                 Id = model.Id,
+                UsuarioId = model.UsuarioId,
                 Login = model.Login,
                 Senha = model.Senha,
                 Nome = model.Nome,
@@ -49,6 +50,7 @@ namespace OpenFluency.Web.Mappings
             var request = new EditarProfessorRequest
             {
                 Id = model.Id,
+                UsuarioId = model.UsuarioId,
                 Login = model.Login!,
                 Senha = model.Senha!,
                 Nome = model.Nome!,
