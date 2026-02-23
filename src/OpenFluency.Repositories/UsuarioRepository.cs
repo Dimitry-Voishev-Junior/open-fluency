@@ -8,6 +8,10 @@ namespace OpenFluency.Repositories
         Usuario? ObterPorLogin(string login);
 
         int? Inserir(Usuario usuario);
+
+        int? Atualizar(Usuario usuario);
+
+        int? Apagar(int id);
     }
 
     public class UsuarioRepository : BaseRepository, IUsuarioRepository
@@ -68,6 +72,40 @@ namespace OpenFluency.Repositories
 
                 return usuarioId;
 
+            }
+        }
+
+        public int? Atualizar(Usuario usuario)
+        {
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                string query = "UPDATE usuario SET login = @login, senha = @senha WHERE usuario_id = @usuario_id";
+
+                var cmd = new MySqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@login", usuario.Login);
+                cmd.Parameters.AddWithValue("@senha", usuario.Senha);
+                cmd.Parameters.AddWithValue("@usuario_id", usuario.Id);
+
+                conn.Open();
+
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int? Apagar(int id)
+        {
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                string query = "DELETE FROM usuario WHERE usuario_id = @usuario_id";
+
+                var cmd = new MySqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@usuario_id", id);
+
+                conn.Open();
+
+                return cmd.ExecuteNonQuery();
             }
         }
     }

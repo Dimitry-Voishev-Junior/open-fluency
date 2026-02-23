@@ -1,4 +1,5 @@
-﻿using OpenFluency.Repositories;
+﻿using MySqlX.XDevAPI.Common;
+using OpenFluency.Repositories;
 using OpenFluency.Services.Mappings;
 using OpenFluency.Services.Models.Professor;
 
@@ -7,7 +8,10 @@ namespace OpenFluency.Services
     public interface IProfessorService
     {
         CriarProfessorResult Criar(CriarProfessorRequest request);
+        EditarProfessorResult Editar(EditarProfessorRequest request);
+        ExcluirProfessorResult Excluir(int id);
         IList<ProfessorResult> Listar();
+        ProfessorResult? ObterPorId(int id);
     }
 
     public class ProfessorService : IProfessorService
@@ -55,11 +59,93 @@ namespace OpenFluency.Services
             return result;
         }
 
+        public EditarProfessorResult Editar(EditarProfessorRequest request)
+        {
+            var result = new EditarProfessorResult();
+            var usuarioExistente = _usuarioRepository.ObterPorLogin(request.Login);
+
+            if (usuarioExistente !=null && usuarioExistente.Id != request.Id)
+            {
+                result.MensagemErro = "Já existe outro usuário com esse login.";
+                return result;
+            }
+
+            var professor = request.MapToProfessor();
+
+            var affectedRows = _professorRepository.Atualizar(professor);
+
+            if (affectedRows == 0)
+            {
+                result.MensagemErro = "Não foi possível atualizar o professor.";
+                return result;
+            }
+
+            var usuario = request.MapToUsuario();
+
+            affectedRows = _usuarioRepository.Atualizar(usuario);
+
+            if (affectedRows == 0)
+            {
+                result.MensagemErro = "Não foi possível atualizar o professor.";
+                return result;
+            }
+
+            result.Sucesso = true;
+
+            return result;
+        }
+
         public IList<ProfessorResult> Listar()
         {
             var professores = _professorRepository.Listar();
 
             var result = professores.Select(c => c.MapToProfessorResult()).ToList();
+
+            return result;
+        }
+
+        public ExcluirProfessorResult Excluir(int id)
+        {
+            var result = new ExcluirProfessorResult();
+
+            var professor = _professorRepository.ObterPorId(id);
+
+            if (professor == null)
+            {
+                result.MensagemErro = "Professor não encontrado.";
+                return result;
+            }
+
+            var affectedRows = _professorRepository.Apagar(id);
+
+            if (affectedRows == 0)
+            {
+                result.MensagemErro = "Não foi possível excluir o professor.";
+                return result;
+            }
+
+            affectedRows = _usuarioRepository.Apagar(professor.UsuarioId);
+
+            if (affectedRows == 0)
+            {
+                result.MensagemErro = "Não foi possível excluir o usuário.";
+                return result;
+            }
+
+            result.Sucesso = true;
+
+            return result;
+        }
+
+        public ProfessorResult? ObterPorId(int id)
+        {
+            var professor = _professorRepository.ObterPorId(id);
+
+            if (professor == null)
+            {
+                return null;
+            }
+            var result = professor.MapToProfessorResult();
 
             return result;
         }

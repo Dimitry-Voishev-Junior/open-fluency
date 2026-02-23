@@ -30,5 +30,31 @@ namespace OpenFluency.Web.Mappings
 
             return viewModel;
         }
+
+        public static EditarViewModel MapToEditarViewModel(this ProfessorResult model)
+        {
+            var viewModel = new EditarViewModel
+            {
+                Id = model.Id,
+                Login = model.Login,
+                Senha = model.Senha,
+                Nome = model.Nome,
+                Email = model.Email
+            };
+            return viewModel;
+        }
+
+        public static EditarProfessorRequest MapToEditarProfessorRequest(this EditarViewModel model)
+        {
+            var request = new EditarProfessorRequest
+            {
+                Id = model.Id,
+                Login = model.Login!,
+                Senha = model.Senha!,
+                Nome = model.Nome!,
+                Email = model.Email!
+            };
+            return request;
+        }
     }
 }
