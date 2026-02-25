@@ -6,6 +6,7 @@ namespace OpenFluency.Repositories
     public interface IAlunoRepository
     {
         int? Inserir(Aluno aluno);
+        IList<Aluno> Listar();
         Aluno? ObterPorId(int id);
     }
 
@@ -36,6 +37,48 @@ namespace OpenFluency.Repositories
             }
 
             return alunoId;
+        }
+
+        public IList<Aluno> Listar()
+        {
+            var result = new List<Aluno>();
+
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                string query = @"SELECT a.aluno_id, a.nome, a.email, u.usuario_id, u.login, u.senha FROM
+                                aluno a INNER JOIN
+                                usuario u ON a.usuario_id = u.usuario_id
+                                ORDER BY
+                                a.aluno_id";
+
+                var cmd = new MySqlCommand(query, conn);
+
+                conn.Open();
+
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var aluno = new Aluno
+                        {
+                            Id = reader.GetInt32("aluno_id"),
+                            Nome = reader.GetString("nome"),
+                            Email = reader.GetString("email"),
+                            UsuarioId = reader.GetInt32("usuario_id"),
+                            Usuario = new Usuario
+                            {
+                                Id = reader.GetInt32("usuario_id"),
+                                Login = reader.GetString("login"),
+                                Senha = reader.GetString("senha")
+                            }
+                        };
+
+                        result.Add(aluno);
+                    }
+                }
+            }
+
+            return result;
         }
 
         public Aluno? ObterPorId(int id)

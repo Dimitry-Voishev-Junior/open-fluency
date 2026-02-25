@@ -7,6 +7,7 @@ namespace OpenFluency.Services
     public interface IAlunoService
     {
         CriarAlunoResult Criar(CriarAlunoRequest request);
+        IList<AlunoResult> Listar();
     }
 
     public class AlunoService : IAlunoService
@@ -50,6 +51,15 @@ namespace OpenFluency.Services
             _alunoRepository.Inserir(aluno);
 
             result.Sucesso = true;
+
+            return result;
+        }
+
+        public IList<AlunoResult> Listar()
+        {
+            var alunos = _alunoRepository.Listar();
+
+            var result = alunos.Select(a => a.MapToAlunoResult()).ToList();
 
             return result;
         }

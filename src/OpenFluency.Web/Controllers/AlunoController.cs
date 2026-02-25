@@ -28,7 +28,7 @@ namespace OpenFluency.Web.Controllers
 
         public IActionResult Criar(CriarViewModel model)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return View(model);
             }
@@ -43,7 +43,17 @@ namespace OpenFluency.Web.Controllers
                 return View(model);
             }
 
-            return View(model);
+            return RedirectToAction("listar");
+        }
+
+        [Route("listar")]
+        public IActionResult Listar()
+        {
+            var alunos = _alunoService.Listar();
+
+            var result = alunos.Select(c => c.MapToListarViewModel()).ToList();
+
+            return View(result);
         }
     }
 }

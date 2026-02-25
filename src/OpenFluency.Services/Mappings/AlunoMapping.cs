@@ -16,5 +16,19 @@ namespace OpenFluency.Services.Mappings
 
             return aluno;
         }
+
+        public static AlunoResult MapToAlunoResult(this Aluno aluno)
+        {
+            var result = new AlunoResult
+            {
+                Id = aluno.Id,
+                UsuarioId = aluno.UsuarioId,
+                Nome = aluno.Nome,
+                Email = aluno.Email,
+                Login = aluno.Usuario.Login,
+                Senha = aluno.Usuario.Senha,
+            };
+            return result;
+        }
     }
 }
