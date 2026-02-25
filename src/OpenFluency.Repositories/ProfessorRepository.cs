@@ -1,6 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
 using OpenFluency.Repositories.Entities;
-using System.Security.Cryptography;
 
 namespace OpenFluency.Repositories
 {
@@ -24,7 +23,7 @@ namespace OpenFluency.Repositories
 
         public int? Inserir(Professor professor)
         {
-            int? professorID = null;
+            int? professorId = null;
 
             using (var conn = new MySqlConnection(ConnectionString))
             {
@@ -39,10 +38,10 @@ namespace OpenFluency.Repositories
 
                 conn.Open();
 
-                professorID = Convert.ToInt32(cmd.ExecuteScalar());
+                professorId = Convert.ToInt32(cmd.ExecuteScalar());
             }
 
-            return professorID;
+            return professorId;
         }
 
         public int? Atualizar(Professor professor)

@@ -1,5 +1,4 @@
-﻿using MySqlX.XDevAPI.Common;
-using OpenFluency.Repositories;
+﻿using OpenFluency.Repositories;
 using OpenFluency.Services.Mappings;
 using OpenFluency.Services.Models.Professor;
 
