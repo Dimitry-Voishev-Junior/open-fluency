@@ -1,5 +1,4 @@
 ﻿using OpenFluency.Services.Models.Aluno;
-using OpenFluency.Services.Models.Professor;
 using OpenFluency.Web.Models.Aluno;
 
 namespace OpenFluency.Web.Mappings
@@ -30,6 +29,34 @@ namespace OpenFluency.Web.Mappings
             };
 
             return viewModel;
+        }
+
+        public static EditarViewModel MapToEditarViewModel(this AlunoResult model)
+        {
+            var viewModel = new EditarViewModel
+            {
+                Id = model.Id,
+                UsuarioId = model.UsuarioId,
+                Login = model.Login,
+                Senha = model.Senha,
+                Nome = model.Nome,
+                Email = model.Email
+            };
+            return viewModel;
+        }
+
+        public static EditarAlunoRequest MapToEditarAlunoRequest(this EditarViewModel model)
+        {
+            var request = new EditarAlunoRequest
+            {
+                Id = model.Id,
+                UsuarioId = model.UsuarioId,
+                Login = model.Login!,
+                Senha = model.Senha!,
+                Nome = model.Nome!,
+                Email = model.Email!
+            };
+            return request;
         }
     }
 }

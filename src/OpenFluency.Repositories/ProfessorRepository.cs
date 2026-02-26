@@ -75,7 +75,7 @@ namespace OpenFluency.Repositories
                 conn.Open();
 
                 return cmd.ExecuteNonQuery();
-            }
+            };
         }
 
         public IList<Professor> Listar()

@@ -7,6 +7,8 @@ namespace OpenFluency.Repositories
     {
         int? Inserir(Aluno aluno);
         IList<Aluno> Listar();
+        int? Atualizar(Aluno aluno);
+        int? Apagar(int id);
         Aluno? ObterPorId(int id);
     }
 
@@ -81,6 +83,40 @@ namespace OpenFluency.Repositories
             return result;
         }
 
+        public int? Atualizar(Aluno aluno)
+        {
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                string query = "UPDATE aluno SET nome = @nome, email = @email WHERE aluno_id = @aluno_id";
+
+                var cmd = new MySqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@nome", aluno.Nome);
+                cmd.Parameters.AddWithValue("@email", aluno.Email);
+                cmd.Parameters.AddWithValue("@aluno_id", aluno.Id);
+
+                conn.Open();
+
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int? Apagar(int id)
+        {
+            using (var conn = new MySqlConnection(ConnectionString))
+            {
+                string query = "DELETE FROM aluno WHERE aluno_id = @aluno_id";
+
+                var cmd = new MySqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@aluno_id", id);
+
+                conn.Open();
+
+                return cmd.ExecuteNonQuery();
+            };
+        }
+
         public Aluno? ObterPorId(int id)
         {
             Aluno? result = null;
@@ -117,7 +153,7 @@ namespace OpenFluency.Repositories
                             }
                         };
                     }
-                }
+                };
             }
 
             return result;

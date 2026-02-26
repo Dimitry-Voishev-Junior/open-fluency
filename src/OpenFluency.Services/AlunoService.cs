@@ -8,6 +8,9 @@ namespace OpenFluency.Services
     {
         CriarAlunoResult Criar(CriarAlunoRequest request);
         IList<AlunoResult> Listar();
+        EditarAlunoResult Editar(EditarAlunoRequest request);
+        ExcluirAlunoResult Excluir(int id);
+        AlunoResult? ObterPorId(int id);
     }
 
     public class AlunoService : IAlunoService
@@ -60,6 +63,88 @@ namespace OpenFluency.Services
             var alunos = _alunoRepository.Listar();
 
             var result = alunos.Select(a => a.MapToAlunoResult()).ToList();
+
+            return result;
+        }
+
+        public EditarAlunoResult Editar(EditarAlunoRequest request)
+        {
+            var result = new EditarAlunoResult();
+            var usuarioExistente = _usuarioRepository.ObterPorLogin(request.Login);
+
+            if (usuarioExistente != null && usuarioExistente.Id != request.UsuarioId)
+            {
+                result.MensagemErro = "Já existe outro usuário com esse login.";
+                return result;
+            }
+
+            var aluno = request.MapToAluno();
+
+            var affectedRows = _alunoRepository.Atualizar(aluno);
+
+            if (affectedRows == 0)
+            {
+                result.MensagemErro = "Não foi possível atualizar o aluno.";
+                return result;
+            }
+
+            var usuario = request.MapToUsuario();
+
+            affectedRows = _usuarioRepository.Atualizar(usuario);
+
+            if (affectedRows == 0)
+            {
+                result.MensagemErro = "Não foi possível atualizar o professor.";
+                return result;
+            }
+
+            result.Sucesso = true;
+
+            return result;
+        }
+
+        public ExcluirAlunoResult Excluir(int id)
+        {
+            var result = new ExcluirAlunoResult();
+
+            var aluno = _alunoRepository.ObterPorId(id);
+
+            if (aluno == null)
+            {
+                result.MensagemErro = "Aluno não encontrado.";
+                return result;
+            }
+
+            var affectedRows = _alunoRepository.Apagar(id);
+
+            if (affectedRows == 0)
+            {
+                result.MensagemErro = "Não foi possível excluir o aluno.";
+                return result;
+            }
+
+            affectedRows = _usuarioRepository.Apagar(aluno.UsuarioId);
+
+            if (affectedRows == 0)
+            {
+                result.MensagemErro = "Não foi possível excluir o usuário.";
+                return result;
+            }
+
+            result.Sucesso = true;
+
+            return result;
+        }
+
+        public AlunoResult? ObterPorId(int id)
+        {
+            var aluno = _alunoRepository.ObterPorId(id);
+
+            if (aluno == null)
+            {
+                return null;
+            }
+            var result = aluno.MapToAlunoResult();
 
             return result;
         }

@@ -41,5 +41,16 @@ namespace OpenFluency.Services.Mappings
 
             return usuario;
         }
+
+        public static Usuario MapToUsuario(this EditarAlunoRequest request)
+        {
+            var usuario = new Usuario
+            {
+                Id = request.UsuarioId,
+                Login = request.Login,
+                Senha = request.Senha
+            };
+            return usuario;
+        }
     }
 }

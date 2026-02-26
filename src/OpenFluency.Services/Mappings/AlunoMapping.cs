@@ -30,5 +30,17 @@ namespace OpenFluency.Services.Mappings
             };
             return result;
         }
+
+        public static Aluno MapToAluno(this EditarAlunoRequest request)
+        {
+            var aluno = new Aluno
+            {
+                Id = request.Id,
+                Nome = request.Nome,
+                Email = request.Email
+            };
+
+            return aluno;
+        }
     }
 }
