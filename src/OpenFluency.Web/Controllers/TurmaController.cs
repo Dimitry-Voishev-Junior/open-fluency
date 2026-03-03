@@ -1,31 +1,39 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using OpenFluency.Services;
 using OpenFluency.Web.Mappings;
-using OpenFluency.Web.Models.Professor;
+using OpenFluency.Web.Models.Turma;
 
 namespace OpenFluency.Web.Controllers
 {
-
-    [Route("professor")]
+    [Route("turma")]
     [Authorize]
-    public class ProfessorController : Controller
+    public class TurmaController : Controller
     {
+        private readonly ITurmaService _turmaService;
         private readonly IProfessorService _professorService;
-        public ProfessorController(IProfessorService professorService) 
-        { 
+        public TurmaController(ITurmaService turmaService, IProfessorService professorService)
+        {
+            _turmaService = turmaService;
             _professorService = professorService;
         }
 
         [Route("criar")]
         public IActionResult Criar()
         {
-            return View();
+            var model = new CriarViewModel();
+
+            model.Semestres = ObterListaSemestres();
+
+            model.Professores = ObterListaProfessores();
+
+            return View(model);
         }
 
         [HttpPost]
         [Route("criar")]
-       public IActionResult Criar(CriarViewModel model)
+        public IActionResult Criar(CriarViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -33,7 +41,7 @@ namespace OpenFluency.Web.Controllers
             }
 
             // criar o professor
-            var result = _professorService.Criar(model.MapToCriarProfessorRequest());
+            var result = _turmaService.Criar(model.MapToCriarTurmaRequest());
 
             if (!result.Sucesso)
             {
@@ -47,9 +55,9 @@ namespace OpenFluency.Web.Controllers
         [Route("listar")]
         public IActionResult Listar()
         {
-            var professores = _professorService.Listar();
+            var turmas = _turmaService.Listar();
 
-            var result = professores.Select(c => c.MapToListarViewModel()).ToList();
+            var result = turmas.Select(c => c.MapToListarViewModel()).ToList();
 
             return View(result);
         }
@@ -57,9 +65,18 @@ namespace OpenFluency.Web.Controllers
         [Route("editar/{id}")]
         public IActionResult Editar(int id)
         {
-            var professor = _professorService.ObterPorId(id);
+            var turma = _turmaService.ObterPorId(id);
 
-            var model = professor?.MapToEditarViewModel();
+            if (turma == null)
+            {
+                return RedirectToAction("listar");
+            }
+
+            var model = turma.MapToEditarViewModel();
+
+            model.Semestres = ObterListaSemestres();
+
+            model.Professores = ObterListaProfessores();
 
             return View(model);
         }
@@ -73,9 +90,9 @@ namespace OpenFluency.Web.Controllers
                 return View(model);
             }
 
-            var request = model.MapToEditarProfessorRequest();
+            var request = model.MapToEditarTurmaRequest();
 
-            var result = _professorService.Editar(request);
+            var result = _turmaService.Editar(request);
 
             if (!result.Sucesso)
             {
@@ -91,7 +108,7 @@ namespace OpenFluency.Web.Controllers
         [HttpPost]
         public IActionResult Excluir(EditarViewModel model)
         {
-            var result = _professorService.Excluir(model.Id);
+            var result = _turmaService.Excluir(model.Id);
 
             if (!result.Sucesso)
             {
@@ -100,6 +117,21 @@ namespace OpenFluency.Web.Controllers
             }
 
             return RedirectToAction("Listar");
+        }
+
+        private List<SelectListItem> ObterListaSemestres()
+        {
+            return new List<SelectListItem>
+            {
+                new SelectListItem { Value = "1", Text = "1º Semestre" },
+                new SelectListItem { Value = "2", Text = "2º Semestre" }
+            };
+        }
+
+        private List<SelectListItem> ObterListaProfessores()
+        {
+            return _professorService.Listar()
+                .Select(p => new SelectListItem(p.Nome, p.Id.ToString())).ToList();
         }
     }
 }

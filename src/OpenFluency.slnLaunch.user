@@ -1,0 +1,22 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "OpenFluency.Repositories\\OpenFluency.Repositories.csproj",
+        "Action": "Start",
+        "DebugTarget": "OpenFluency.Repositories"
+      },
+      {
+        "Path": "OpenFluency.Services\\OpenFluency.Services.csproj",
+        "Action": "Start",
+        "DebugTarget": "OpenFluency.Services"
+      },
+      {
+        "Path": "OpenFluency.Web\\OpenFluency.Web.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      }
+    ]
+  }
+]

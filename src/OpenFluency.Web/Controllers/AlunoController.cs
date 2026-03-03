@@ -35,7 +35,7 @@ namespace OpenFluency.Web.Controllers
 
             // criar aluno
 
-            var result = _alunoService.Criar(model.MaptoCriarAlunoRequest());
+            var result = _alunoService.Criar(model.MapToCriarAlunoRequest());
 
             if (!result.Sucesso)
             {

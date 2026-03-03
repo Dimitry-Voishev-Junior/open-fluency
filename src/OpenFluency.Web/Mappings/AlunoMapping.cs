@@ -5,7 +5,7 @@ namespace OpenFluency.Web.Mappings
 {
     public static class AlunoMapping
     {
-        public static CriarAlunoRequest MaptoCriarAlunoRequest(this CriarViewModel model)
+        public static CriarAlunoRequest MapToCriarAlunoRequest(this CriarViewModel model)
         {
             var request = new CriarAlunoRequest
             {
