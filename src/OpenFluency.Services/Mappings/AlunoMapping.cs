@@ -41,6 +41,6 @@ namespace OpenFluency.Services.Mappings
             };
 
             return aluno;
-        }
+        }   
     }
 }

@@ -8,6 +8,7 @@ namespace OpenFluency.Services
     {
         CriarAlunoResult Criar(CriarAlunoRequest request);
         IList<AlunoResult> Listar();
+        IList<AlunoResult> ListarPorTurma(int turmaId);
         EditarAlunoResult Editar(EditarAlunoRequest request);
         ExcluirAlunoResult Excluir(int id);
         AlunoResult? ObterPorId(int id);
@@ -61,6 +62,15 @@ namespace OpenFluency.Services
         public IList<AlunoResult> Listar()
         {
             var alunos = _alunoRepository.Listar();
+
+            var result = alunos.Select(a => a.MapToAlunoResult()).ToList();
+
+            return result;
+        }
+
+        public IList<AlunoResult> ListarPorTurma(int turmaId)
+        {
+            var alunos = _alunoRepository.ListarPorTurma(turmaId);
 
             var result = alunos.Select(a => a.MapToAlunoResult()).ToList();
 

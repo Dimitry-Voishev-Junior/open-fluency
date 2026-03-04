@@ -1,4 +1,5 @@
 ﻿using OpenFluency.Repositories;
+using OpenFluency.Repositories.Entities;
 using OpenFluency.Services.Mappings;
 using OpenFluency.Services.Models.Turma;
 
@@ -8,6 +9,7 @@ namespace OpenFluency.Services
     {
         CriarTurmaResult Criar(CriarTurmaRequest request);
         EditarTurmaResult Editar(EditarTurmaRequest request);
+        AssociarAlunoTurmaResult AssociarAlunoTurma(int alunoId, int turmaId);
         ExcluirTurmaResult Excluir(int id);
         IList<TurmaResult> Listar();
         TurmaResult? ObterPorId(int id);
@@ -16,10 +18,13 @@ namespace OpenFluency.Services
     public class TurmaService : ITurmaService
     {
         private readonly ITurmaRepository _turmaRepository;
+        private readonly IAlunoTurmaBoletimRepository _alunoTurmaBoletimRepository;
 
-        public TurmaService(ITurmaRepository turmaRepository)
+        public TurmaService(ITurmaRepository turmaRepository,
+            IAlunoTurmaBoletimRepository alunoTurmaBoletimRepository)
         {
             _turmaRepository = turmaRepository;
+            _alunoTurmaBoletimRepository = alunoTurmaBoletimRepository;
         }
 
         public CriarTurmaResult Criar(CriarTurmaRequest request)
@@ -57,6 +62,26 @@ namespace OpenFluency.Services
 
             result.Sucesso = true;
 
+            return result;
+        }
+
+        public AssociarAlunoTurmaResult AssociarAlunoTurma(int alunoId, int turmaId)
+        {
+            var result = new AssociarAlunoTurmaResult();
+
+            var alunoTurmaBoletim = new AlunoTurmaBoletim
+            {
+                AlunoId = alunoId,
+                TurmaId = turmaId
+            };
+
+            var affectedRows = _alunoTurmaBoletimRepository.Inserir(alunoTurmaBoletim);
+            if (affectedRows == 0)
+            {
+                result.MensagemErro = "Não foi possível associar o aluno à turma.";
+                return result;
+            }
+            result.Sucesso = true;
             return result;
         }
 

@@ -13,10 +13,16 @@ namespace OpenFluency.Web.Controllers
     {
         private readonly ITurmaService _turmaService;
         private readonly IProfessorService _professorService;
-        public TurmaController(ITurmaService turmaService, IProfessorService professorService)
+        private readonly IAlunoService _alunoService;
+
+        public TurmaController(
+            ITurmaService turmaService,
+            IProfessorService professorService,
+            IAlunoService alunoService)
         {
             _turmaService = turmaService;
             _professorService = professorService;
+            _alunoService = alunoService;
         }
 
         [Route("criar")]
@@ -74,9 +80,13 @@ namespace OpenFluency.Web.Controllers
 
             var model = turma.MapToEditarViewModel();
 
+            model.AlunosTurma = _alunoService.ListarPorTurma(id).Select(c => c.MapToAlunoTurmaViewModel()).ToList();
+
+            model.Alunos = _alunoService.Listar().Select(c => c.MapToAlunoTurmaViewModel()).ToList();
+
             model.Semestres = ObterListaSemestres();
 
-            model.Professores = ObterListaProfessores();
+            model.Professores = ObterListaProfessores();    
 
             return View(model);
         }
@@ -102,6 +112,23 @@ namespace OpenFluency.Web.Controllers
             }
 
             return RedirectToAction("Listar");
+        }
+
+        [HttpPost]
+        [Route("AssociarAlunos")]
+        public IActionResult AssociarAlunos(int turmaId)
+        {
+            foreach (var formItem in Request.Form)
+            {
+                if (formItem.Key.StartsWith("aluno_"))
+                {
+                    var alunoId = int.Parse(formItem.Key.Split("_")[1]);
+
+                    _turmaService.AssociarAlunoTurma(alunoId, turmaId);
+                }
+            }
+
+            return RedirectToAction("Editar", "Turma", new {id = turmaId});
         }
 
         [Route("excluir/{id}")]
