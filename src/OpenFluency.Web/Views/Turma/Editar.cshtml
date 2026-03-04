@@ -1,10 +1,12 @@
-﻿@model OpenFluency.Web.Models.Turma.EditarViewModel
+﻿@using OpenFluency.Web.Models.Menu
+@model OpenFluency.Web.Models.Turma.EditarViewModel
 
 @{
     ViewData["Title"] = "Editar Turma";
+    ViewData["Menu"] = Menu.Turma;
 }
 
-<h1>Editar Professor</h1>
+<h1>Editar Turma</h1>
 
 <form class="row g-3 needs-validation" novalidate asp-controller="Turma" asp-action="Editar">
     <div class="col-md-6">

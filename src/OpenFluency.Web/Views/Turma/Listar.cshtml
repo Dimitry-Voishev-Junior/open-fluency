@@ -1,6 +1,9 @@
-﻿@model IList<OpenFluency.Web.Models.Turma.ListarViewModel>;
+﻿@using OpenFluency.Web.Models.Menu
+@using OpenFluency.Web.Models.Turma
+@model IList<ListarViewModel>;
 @{
     ViewData["Title"] = "Listar Turmas";
+    ViewData["Menu"] = Menu.Turma;
 }
 
 <h1>Lista de Turmas</h1>

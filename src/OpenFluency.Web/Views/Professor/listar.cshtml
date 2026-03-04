@@ -1,6 +1,9 @@
-﻿@model IList<OpenFluency.Web.Models.Professor.ListarViewModel>;
+﻿@using OpenFluency.Web.Models.Menu
+@using OpenFluency.Web.Models.Professor
+@model IList<ListarViewModel>;
 @{
     ViewData["Title"] = "Listar Professores";
+    ViewData["Menu"] = Menu.Professor;
 }
 
 <h1>Lista de Professores</h1>
