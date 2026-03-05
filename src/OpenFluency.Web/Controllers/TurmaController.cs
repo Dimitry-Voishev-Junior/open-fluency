@@ -115,8 +115,8 @@ namespace OpenFluency.Web.Controllers
         }
 
         [HttpPost]
-        [Route("AssociarAlunos")]
-        public IActionResult AssociarAlunos(int turmaId)
+        [Route("associarAlunos")]
+        public IActionResult AssociarAluno(int turmaId)
         {
             foreach (var formItem in Request.Form)
             {
@@ -128,7 +128,16 @@ namespace OpenFluency.Web.Controllers
                 }
             }
 
-            return RedirectToAction("Editar", "Turma", new {id = turmaId});
+            return RedirectToAction("Editar", "turma", new {id = turmaId});
+        }
+
+        [HttpPost]
+        [Route("desassociarAluno")]
+        public IActionResult DesassociarAluno(int alunoId, int turmaId)
+        {
+            _turmaService.DesassociarAlunoTurma(alunoId, turmaId);
+
+            return RedirectToAction("Editar", "Turma", new { id = turmaId });
         }
 
         [Route("excluir/{id}")]

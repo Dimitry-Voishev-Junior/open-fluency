@@ -57,6 +57,8 @@
                             <th scope="col">Nome</th>
                             <th scope="col">Email</th>
                             <th scope="col">Login</th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -68,6 +70,11 @@
                                 <td>@aluno.Email</td>
                                 <td>@aluno.Login</td>
                                 <td><a class="text-decoration-none" asp-controller="Aluno" asp-action="Editar" asp-route-id="@aluno.Id">Editar</a></td>
+                                <td>
+                                    <form asp-controller="Turma" asp-action="desassociarAluno" asp-route-alunoId="@aluno.Id" asp-route-turmaId="@Model.Id">
+                                        <button class="btn p-0 link-danger" type="submit">Excluir</button>
+                                    </form>
+                                </td>
                             </tr>
                         }
                     </tbody>

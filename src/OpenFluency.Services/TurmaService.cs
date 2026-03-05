@@ -10,6 +10,7 @@ namespace OpenFluency.Services
         CriarTurmaResult Criar(CriarTurmaRequest request);
         EditarTurmaResult Editar(EditarTurmaRequest request);
         AssociarAlunoTurmaResult AssociarAlunoTurma(int alunoId, int turmaId);
+        AssociarAlunoTurmaResult DesassociarAlunoTurma(int alunoId, int turmaId);
         ExcluirTurmaResult Excluir(int id);
         IList<TurmaResult> Listar();
         TurmaResult? ObterPorId(int id);
@@ -75,6 +76,14 @@ namespace OpenFluency.Services
                 TurmaId = turmaId
             };
 
+            var alunoTurma = _alunoTurmaBoletimRepository.ObterPorAlunoTurma(alunoId, turmaId);
+
+            if (alunoTurma != null)
+            {
+                result.MensagemErro = "O aluno já está associado a esta turma.";
+                return result;
+            }
+
             var affectedRows = _alunoTurmaBoletimRepository.Inserir(alunoTurmaBoletim);
             if (affectedRows == 0)
             {
@@ -82,6 +91,31 @@ namespace OpenFluency.Services
                 return result;
             }
             result.Sucesso = true;
+            return result;
+        }
+
+        public AssociarAlunoTurmaResult DesassociarAlunoTurma(int alunoId, int turmaId)
+        {
+            var result = new AssociarAlunoTurmaResult();
+
+            var alunoTurma = _alunoTurmaBoletimRepository.ObterPorAlunoTurma(alunoId, turmaId);
+
+            if (alunoTurma == null)
+            {
+                result.MensagemErro = "O aluno não pertence a essa turma";
+                return result;
+            }
+
+            var affectedRows = _alunoTurmaBoletimRepository.Apagar(alunoId, turmaId);
+
+            if (affectedRows == 0)
+            {
+                result.MensagemErro = "Não foi possível desassociar o aluno à turma";
+                return result;
+            }
+
+            result.Sucesso = true;
+
             return result;
         }
 
