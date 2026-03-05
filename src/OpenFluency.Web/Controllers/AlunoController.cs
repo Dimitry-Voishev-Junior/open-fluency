@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenFluency.Services;
+using OpenFluency.Services.Models.Aluno;
 using OpenFluency.Web.Mappings;
 using OpenFluency.Web.Models.Aluno;
 
@@ -18,14 +19,15 @@ namespace OpenFluency.Web.Controllers
         }
 
         [Route("criar")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Criar()
         {
             return View();
         }
 
         [Route("criar")]
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
-
         public IActionResult Criar(CriarViewModel model)
         {
             if (!ModelState.IsValid)
@@ -47,16 +49,33 @@ namespace OpenFluency.Web.Controllers
         }
 
         [Route("listar")]
+
         public IActionResult Listar()
         {
-            var alunos = _alunoService.Listar();
+            IList<AlunoResult>? alunos = null;
 
-            var result = alunos.Select(c => c.MapToListarViewModel()).ToList();
+            if (User.IsInRole("Administrador"))
+            {
+                alunos = _alunoService.Listar();
+            }
+            else if  (User.IsInRole("Professor"))
+            {
+                var usuarioId = Convert.ToInt32(User.FindFirst("Id")?.Value);
 
-            return View(result);
+                alunos = _alunoService.ListarPorProfessor(usuarioId);
+            }
+
+            var model = new ListarViewModel
+            {
+                Alunos = alunos.Select(c => c.MapToAlunoViewModel()).ToList(),
+                ExibirBotaoNovoEditar = User.IsInRole("Administrador")
+            };
+
+            return View(model);
         }
 
         [Route("editar/{id}")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Editar(int id)
         {
             var aluno = _alunoService.ObterPorId(id);
@@ -67,6 +86,7 @@ namespace OpenFluency.Web.Controllers
         }
 
         [Route("editar/{id}")]
+        [Authorize("Administrador")]
         [HttpPost]
         public IActionResult Editar(EditarViewModel model)
         {
@@ -90,6 +110,7 @@ namespace OpenFluency.Web.Controllers
         }
 
         [Route("excluir/{id}")]
+        [Authorize(Roles = "Administrador")]
         [HttpPost]
 
         public IActionResult Excluir(EditarViewModel model)

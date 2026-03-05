@@ -2,6 +2,7 @@
 using OpenFluency.Services.Enums;
 using OpenFluency.Services.Models.Aluno;
 using OpenFluency.Services.Models.Professor;
+using OpenFluency.Services.Models.Usuario;
 
 namespace OpenFluency.Services.Mappings
 {
@@ -51,6 +52,18 @@ namespace OpenFluency.Services.Mappings
                 Senha = request.Senha
             };
             return usuario;
+        }
+
+        public static UsuarioResult MapToUsuarioResult(this Usuario usuario)
+        {
+            var usuarioResult = new UsuarioResult
+            {
+                Id = usuario.Id,
+                Login = usuario.Login,
+                Papel = (Papel)usuario.PapelId
+            };
+
+            return usuarioResult;
         }
     }
 }

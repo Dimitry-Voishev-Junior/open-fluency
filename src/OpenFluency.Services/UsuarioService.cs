@@ -1,8 +1,6 @@
 ﻿using OpenFluency.Repositories;
 using OpenFluency.Services.Models.Usuario;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using OpenFluency.Services.Mappings;
 
 namespace OpenFluency.Services
 {
@@ -27,14 +25,12 @@ namespace OpenFluency.Services
             if (string.IsNullOrEmpty(login))
             {
                 result.MensagemErro = "Usuário é obrigatório";
-
                 return result;
             }
 
             if (string.IsNullOrEmpty(senha))
             {
                 result.MensagemErro = "Senha é obrigatória";
-
                 return result;
             }
 
@@ -42,21 +38,22 @@ namespace OpenFluency.Services
 
             if (usuario == null)
             {
-                result.MensagemErro = "Usuário ou senha inválidos";
+                result.MensagemErro = "Usuário não encontrado";
                 return result;
             }
 
             if (usuario.Senha != senha)
             {
-                result.MensagemErro = "Usuário ou senha inválido";
+                result.MensagemErro = "Senha inválida";
                 return result;
             }
 
             //se chegou até aqui é pq funcionou
+            result.Usuario = usuario.MapToUsuarioResult();
+
             result.Sucesso = true;
 
             return result;
         }
-
     }
 }

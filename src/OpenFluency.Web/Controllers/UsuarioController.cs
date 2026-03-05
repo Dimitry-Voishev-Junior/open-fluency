@@ -43,7 +43,9 @@ namespace OpenFluency.Web.Controllers
             var claims = new List<Claim>
 
                 {
-                    new (ClaimTypes.NameIdentifier, model.Usuario!)
+                    new (ClaimTypes.NameIdentifier, result.Usuario!.Login),
+                    new (ClaimTypes.Role, result.Usuario!.Papel.ToString()),
+                    new ("Id", result.Usuario!.Id.ToString())
                 };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
